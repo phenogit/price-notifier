@@ -4,12 +4,14 @@ export const styles = StyleSheet.create({
   app: {
     flex: 1,
     backgroundColor: "#F9F9F9",
+    padding: 15,
   },
   header: {
     flex: 1,
-    backgroundColor: "#FF0000",
-    justifyContent: "center",
-    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#F9F9F9",
+    borderBottomColor: "#D9D9D9",
+    borderBottomWidth: 1,
   },
   bpdy: {
     flex: 8,
