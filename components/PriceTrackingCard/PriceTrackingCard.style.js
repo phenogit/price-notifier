@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     width: 25,
   },
   details: {
+    alignItems: "flex-start",
     fontSize: 15,
-    width: "100%",
   },
 });
