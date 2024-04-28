@@ -13,11 +13,9 @@ export const styles = StyleSheet.create({
     borderBottomColor: "#D9D9D9",
     borderBottomWidth: 1,
   },
-  bpdy: {
+  body: {
     flex: 8,
-    backgroundColor: "#00FF00",
-    justifyContent: "center",
-    alignItems: "center",
+    pading: 20,
   },
   footer: {
     flex: 1,
