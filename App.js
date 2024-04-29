@@ -1,8 +1,9 @@
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { Text, View } from "react-native";
+import { Text, View, ScrollView } from "react-native";
 import { styles } from "./App.style";
 import { Header } from "./components/Header/Header";
 import { PriceTrackingCard } from "./components/PriceTrackingCard/PriceTrackingCard";
+import { useState } from "react";
 
 const PRICE_TRACKING_LIST = [
   {
@@ -116,6 +117,17 @@ const PRICE_TRACKING_LIST = [
 ];
 
 export default function App() {
+  const [priceTrackingList, setPriceTrackingList] =
+    useState(PRICE_TRACKING_LIST);
+
+  function renderPriceTrackingList() {
+    return priceTrackingList.map((priceTrackingItem) => (
+      <View key={priceTrackingItem.id} style={styles.cardItem}>
+        <PriceTrackingCard priceTrackingItem={priceTrackingItem} />
+      </View>
+    ));
+  }
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.app}>
@@ -123,7 +135,7 @@ export default function App() {
           <Header />
         </View>
         <View style={styles.body}>
-          <PriceTrackingCard priceTrackingItem={PRICE_TRACKING_LIST[0]} />
+          <ScrollView>{renderPriceTrackingList()}</ScrollView>
         </View>
         <View style={styles.footer}>
           <Text>Footer</Text>

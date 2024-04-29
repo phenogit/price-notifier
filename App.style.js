@@ -23,4 +23,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  cardItem: {
+    marginBottom: 20,
+  },
 });
