@@ -123,9 +123,23 @@ export default function App() {
   function renderPriceTrackingList() {
     return priceTrackingList.map((priceTrackingItem) => (
       <View key={priceTrackingItem.id} style={styles.cardItem}>
-        <PriceTrackingCard priceTrackingItem={priceTrackingItem} />
+        <PriceTrackingCard
+          priceTrackingItem={priceTrackingItem}
+          onPress={updatePriceTrackingList}
+        />
       </View>
     ));
+  }
+
+  // update price tracking list by id
+  function updatePriceTrackingList(id) {
+    const updatedPriceTrackingList = priceTrackingList.map((item) => {
+      if (item.id === id) {
+        return { ...item, isComplete: !item.isComplete };
+      }
+      return item;
+    });
+    setPriceTrackingList(updatedPriceTrackingList);
   }
 
   return (
