@@ -125,21 +125,23 @@ export default function App() {
       <View key={priceTrackingItem.id} style={styles.cardItem}>
         <PriceTrackingCard
           priceTrackingItem={priceTrackingItem}
-          onPress={updatePriceTrackingList}
+          onPress={updatePriceTrackingItem}
         />
       </View>
     ));
   }
 
   // update price tracking list by id
-  function updatePriceTrackingList(id) {
-    const updatedPriceTrackingList = priceTrackingList.map((item) => {
-      if (item.id === id) {
-        return { ...item, isComplete: !item.isComplete };
-      }
-      return item;
-    });
-    setPriceTrackingList(updatedPriceTrackingList);
+  function updatePriceTrackingItem(item) {
+    const updatedItem = {
+      ...item,
+      isComplete: !item.isComplete,
+    };
+
+    const updatedList = [...priceTrackingList];
+    const index = updatedList.findIndex((i) => i.id === item.id);
+    updatedList[index] = updatedItem;
+    setPriceTrackingList(updatedList);
   }
 
   return (

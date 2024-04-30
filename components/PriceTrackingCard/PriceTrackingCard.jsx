@@ -5,7 +5,10 @@ import checkIcon from "../../assets/check.png";
 export function PriceTrackingCard({ priceTrackingItem, onPress }) {
   return (
     <>
-      <TouchableOpacity style={styles.card}>
+      <TouchableOpacity
+        style={styles.card}
+        onPress={() => onPress(priceTrackingItem)}
+      >
         <Text
           style={[
             styles.title,
