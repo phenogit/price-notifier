@@ -19,9 +19,9 @@ export const styles = StyleSheet.create({
   },
   footer: {
     flex: 1,
-    backgroundColor: "#0000FF",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: "#F9F9F9",
+    borderTopColor: "#D9D9D9",
+    borderTopWidth: 1,
   },
   cardItem: {
     marginBottom: 20,

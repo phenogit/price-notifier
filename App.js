@@ -3,6 +3,7 @@ import { Text, View, ScrollView } from "react-native";
 import { styles } from "./App.style";
 import { Header } from "./components/Header/Header";
 import { PriceTrackingCard } from "./components/PriceTrackingCard/PriceTrackingCard";
+import { NavigationTabs } from "./components/NavigationTabs/NavigationTabs";
 import { useState } from "react";
 
 const PRICE_TRACKING_LIST = [
@@ -119,6 +120,7 @@ const PRICE_TRACKING_LIST = [
 export default function App() {
   const [priceTrackingList, setPriceTrackingList] =
     useState(PRICE_TRACKING_LIST);
+  const [activeTab, setActiveTab] = useState("all");
 
   function renderPriceTrackingList() {
     return priceTrackingList.map((priceTrackingItem) => (
@@ -154,7 +156,7 @@ export default function App() {
           <ScrollView>{renderPriceTrackingList()}</ScrollView>
         </View>
         <View style={styles.footer}>
-          <Text>Footer</Text>
+          <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
