@@ -2,12 +2,13 @@ import { styles } from "./PriceTrackingCard.style";
 import { Text, TouchableOpacity, Image } from "react-native";
 import checkIcon from "../../assets/check.png";
 
-export function PriceTrackingCard({ priceTrackingItem, onPress }) {
+export function PriceTrackingCard({ priceTrackingItem, onPress, onLongPress }) {
   return (
     <>
       <TouchableOpacity
         style={styles.card}
         onPress={() => onPress(priceTrackingItem)}
+        onLongPress={() => onLongPress(priceTrackingItem)}
       >
         <Text
           style={[

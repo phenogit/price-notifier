@@ -1,5 +1,5 @@
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { Text, View, ScrollView } from "react-native";
+import { Alert, View, ScrollView } from "react-native";
 import { styles } from "./App.style";
 import { Header } from "./components/Header/Header";
 import { PriceTrackingCard } from "./components/PriceTrackingCard/PriceTrackingCard";
@@ -120,20 +120,57 @@ const PRICE_TRACKING_LIST = [
 export default function App() {
   const [priceTrackingList, setPriceTrackingList] =
     useState(PRICE_TRACKING_LIST);
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState("inProgress");
+
+  function getFilteredPriceTrackingList() {
+    switch (activeTab) {
+      case "all":
+        return priceTrackingList;
+      case "inProgress":
+        return priceTrackingList.filter((i) => !i.isComplete);
+      case "done":
+        return priceTrackingList.filter((i) => i.isComplete);
+      default:
+        return priceTrackingList;
+    }
+  }
 
   function renderPriceTrackingList() {
-    return priceTrackingList.map((priceTrackingItem) => (
+    return getFilteredPriceTrackingList().map((priceTrackingItem) => (
       <View key={priceTrackingItem.id} style={styles.cardItem}>
         <PriceTrackingCard
           priceTrackingItem={priceTrackingItem}
           onPress={updatePriceTrackingItem}
+          onLongPress={deletePriceTrackingItem}
         />
       </View>
     ));
   }
 
-  // update price tracking list by id
+  function deletePriceTrackingItem(item) {
+    Alert.alert(
+      "刪除觸價條件",
+      `確定要刪除 ${item.title} 嗎？`,
+      [
+        {
+          text: "取消",
+          style: "cancel",
+        },
+        {
+          text: "確定",
+          style: "destructive",
+          onPress: () => {
+            const updatedList = priceTrackingList.filter(
+              (i) => i.id !== item.id
+            );
+            setPriceTrackingList(updatedList);
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  }
+
   function updatePriceTrackingItem(item) {
     const updatedItem = {
       ...item,
@@ -156,7 +193,11 @@ export default function App() {
           <ScrollView>{renderPriceTrackingList()}</ScrollView>
         </View>
         <View style={styles.footer}>
-          <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+          <NavigationTabs
+            priceTrackingList={priceTrackingList}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
