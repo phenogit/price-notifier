@@ -5,9 +5,10 @@ import { Header } from "./components/Header/Header";
 import { PriceTrackingCard } from "./components/PriceTrackingCard/PriceTrackingCard";
 import { NavigationTabs } from "./components/NavigationTabs/NavigationTabs";
 import { AddButton } from "./components/AddButton/AddButton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Dialog from "react-native-dialog";
 import uuid from "react-native-uuid";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /*
 const PRICE_TRACKING_LIST = [
@@ -123,6 +124,8 @@ const PRICE_TRACKING_LIST = [
 */
 const PRICE_TRACKING_LIST = [];
 
+let isFirstRender = true;
+
 export default function App() {
   const [priceTrackingList, setPriceTrackingList] =
     useState(PRICE_TRACKING_LIST);
@@ -132,6 +135,41 @@ export default function App() {
   const [stockId, setStockId] = useState("");
   const [ceilingPrice, setCeilingPrice] = useState("");
   const [floorPrice, setFloorPrice] = useState("");
+
+  useEffect(() => {
+    loadPriceTrackingList();
+  }, []);
+
+  useEffect(() => {
+    if (!isFirstRender) {
+      savePriceTrackingList();
+    } else {
+      isFirstRender = false;
+    }
+  }, [priceTrackingList]);
+
+  async function loadPriceTrackingList() {
+    console.log("loadPriceTrackingList");
+    try {
+      const priceTrackingList = await AsyncStorage.getItem("priceTrackingList");
+      const parsedPriceTrackingList = JSON.parse(priceTrackingList);
+      setPriceTrackingList(parsedPriceTrackingList || []);
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  async function savePriceTrackingList() {
+    console.log("savePriceTrackingList");
+    try {
+      await AsyncStorage.setItem(
+        "priceTrackingList",
+        JSON.stringify(priceTrackingList)
+      );
+    } catch (error) {
+      alert(error);
+    }
+  }
 
   function getFilteredPriceTrackingList() {
     switch (activeTab) {
