@@ -125,6 +125,7 @@ const PRICE_TRACKING_LIST = [
 const PRICE_TRACKING_LIST = [];
 
 let isFirstRender = true;
+let isLoadUpdate = false;
 
 export default function App() {
   const [priceTrackingList, setPriceTrackingList] =
@@ -141,10 +142,14 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!isFirstRender) {
-      savePriceTrackingList();
+    if (!isLoadUpdate) {
+      if (!isFirstRender) {
+        savePriceTrackingList();
+      } else {
+        isFirstRender = false;
+      }
     } else {
-      isFirstRender = false;
+      isLoadUpdate = false;
     }
   }, [priceTrackingList]);
 
@@ -153,6 +158,7 @@ export default function App() {
     try {
       const priceTrackingList = await AsyncStorage.getItem("priceTrackingList");
       const parsedPriceTrackingList = JSON.parse(priceTrackingList);
+      isLoadUpdate = true;
       setPriceTrackingList(parsedPriceTrackingList || []);
     } catch (error) {
       alert(error);
