@@ -5,7 +5,7 @@ import { Header } from "./components/Header/Header";
 import { PriceTrackingCard } from "./components/PriceTrackingCard/PriceTrackingCard";
 import { NavigationTabs } from "./components/NavigationTabs/NavigationTabs";
 import { AddButton } from "./components/AddButton/AddButton";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Dialog from "react-native-dialog";
 import uuid from "react-native-uuid";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -137,6 +137,8 @@ export default function App() {
   const [ceilingPrice, setCeilingPrice] = useState("");
   const [floorPrice, setFloorPrice] = useState("");
 
+  const scrollViewRef = useRef();
+
   useEffect(() => {
     loadPriceTrackingList();
   }, []);
@@ -229,6 +231,9 @@ export default function App() {
     setCeilingPrice("");
     setFloorPrice("");
     setIsAddPriceTrackingDialogVisible(false);
+    setTimeout(() => {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }, 300);
   }
 
   function deletePriceTrackingItem(item) {
@@ -314,7 +319,9 @@ export default function App() {
           <Header />
         </View>
         <View style={styles.body}>
-          <ScrollView>{renderPriceTrackingList()}</ScrollView>
+          <ScrollView ref={scrollViewRef}>
+            {renderPriceTrackingList()}
+          </ScrollView>
         </View>
         <AddButton onPress={() => setIsAddPriceTrackingDialogVisible(true)} />
         <View style={styles.footer}>
