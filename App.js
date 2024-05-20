@@ -1,14 +1,12 @@
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { Alert, View, ScrollView } from "react-native";
+import { View } from "react-native";
 import { styles } from "./App.style";
-import { Header } from "./components/Header/Header";
-import { PriceTrackingCard } from "./components/PriceTrackingCard/PriceTrackingCard";
 import { NavigationTabs } from "./components/NavigationTabs/NavigationTabs";
-import { AddButton } from "./components/AddButton/AddButton";
 import { useState, useEffect, useRef } from "react";
 import Dialog from "react-native-dialog";
 import uuid from "react-native-uuid";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Home } from "./pages/Home/Home";
 
 /*
 const PRICE_TRACKING_LIST = [
@@ -160,6 +158,7 @@ export default function App() {
     try {
       const priceTrackingList = await AsyncStorage.getItem("priceTrackingList");
       const parsedPriceTrackingList = JSON.parse(priceTrackingList);
+
       isLoadUpdate = true;
       setPriceTrackingList(parsedPriceTrackingList || []);
     } catch (error) {
@@ -179,43 +178,6 @@ export default function App() {
     }
   }
 
-  function getFilteredPriceTrackingList() {
-    switch (activeTab) {
-      case "all":
-        return priceTrackingList;
-      case "inProgress":
-        return priceTrackingList.filter((i) => !i.isComplete);
-      case "done":
-        return priceTrackingList.filter((i) => i.isComplete);
-      default:
-        return priceTrackingList;
-    }
-  }
-
-  function renderPriceTrackingList() {
-    return getFilteredPriceTrackingList().map((priceTrackingItem) => (
-      <View key={priceTrackingItem.id} style={styles.cardItem}>
-        <PriceTrackingCard
-          priceTrackingItem={priceTrackingItem}
-          onPress={updatePriceTrackingItem}
-          onLongPress={deletePriceTrackingItem}
-        />
-      </View>
-    ));
-  }
-
-  /**
-   * {
-    id: 1,
-    title: "2454 聯發科",
-    ceilingPrice: 1000,
-    floorPrice: 800,
-    currentPrice: 900,
-    notificationMode: "ONCE",
-    isComplete: false,
-  },
-   */
-
   function addPriceTrackingItem() {
     const newPriceTrackingItem = {
       id: uuid.v4(),
@@ -234,42 +196,6 @@ export default function App() {
     setTimeout(() => {
       scrollViewRef.current.scrollToEnd({ animated: true });
     }, 300);
-  }
-
-  function deletePriceTrackingItem(item) {
-    Alert.alert(
-      "刪除觸價條件",
-      `確定要刪除 ${item.title} 嗎？`,
-      [
-        {
-          text: "取消",
-          style: "cancel",
-        },
-        {
-          text: "確定",
-          style: "destructive",
-          onPress: () => {
-            const updatedList = priceTrackingList.filter(
-              (i) => i.id !== item.id
-            );
-            setPriceTrackingList(updatedList);
-          },
-        },
-      ],
-      { cancelable: true }
-    );
-  }
-
-  function updatePriceTrackingItem(item) {
-    const updatedItem = {
-      ...item,
-      isComplete: !item.isComplete,
-    };
-
-    const updatedList = [...priceTrackingList];
-    const index = updatedList.findIndex((i) => i.id === item.id);
-    updatedList[index] = updatedItem;
-    setPriceTrackingList(updatedList);
   }
 
   function isValidTrackingItem() {
@@ -315,23 +241,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.app}>
-        <View style={styles.header}>
-          <Header />
-        </View>
-        <View style={styles.body}>
-          <ScrollView ref={scrollViewRef}>
-            {renderPriceTrackingList()}
-          </ScrollView>
-        </View>
-        <AddButton onPress={() => setIsAddPriceTrackingDialogVisible(true)} />
-        <View style={styles.footer}>
-          <NavigationTabs
-            priceTrackingList={priceTrackingList}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
-        </View>
-        {renderAddPriceTrackingDialog()}
+        <Home />
       </SafeAreaView>
     </SafeAreaProvider>
   );
