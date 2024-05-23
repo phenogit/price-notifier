@@ -11,8 +11,7 @@ import { AddButton } from "../../components/AddButton/AddButton";
 import { getFilteredPriceTrackingList } from "../../utils/priceTracking";
 import { NavigationTabs } from "../../components/NavigationTabs/NavigationTabs";
 
-let isFirstRender = true;
-let isLoadUpdate = false;
+let isInitialLoad = false;
 
 export function Home() {
   const [priceTrackingList, setPriceTrackingList] = useState([]);
@@ -24,23 +23,22 @@ export function Home() {
   const [floorPrice, setFloorPrice] = useState("");
 
   useEffect(() => {
-    loadPriceTrackingList();
+    isInitialLoad = true;
+    loadInitialPriceTrackingList();
   }, []);
 
   useEffect(() => {
-    if (!isLoadUpdate) {
-      if (!isFirstRender) {
-        savePriceTrackingList();
-      } else {
-        isFirstRender = false;
-      }
+    if (isInitialLoad) {
+      isInitialLoad = false;
+      return;
     } else {
-      isLoadUpdate = false;
+      savePriceTrackingList();
     }
   }, [priceTrackingList]);
 
+  const scrollViewRef = useRef();
+
   async function savePriceTrackingList() {
-    console.log("savePriceTrackingList");
     try {
       await AsyncStorage.setItem(
         "priceTrackingList",
@@ -51,13 +49,11 @@ export function Home() {
     }
   }
 
-  const scrollViewRef = useRef();
-
-  async function loadPriceTrackingList() {
+  async function loadInitialPriceTrackingList() {
     try {
       const priceTrackingList = await AsyncStorage.getItem("priceTrackingList");
       const parsedPriceTrackingList = JSON.parse(priceTrackingList);
-      isLoadUpdate = true;
+      isInitialLoad = true;
       setPriceTrackingList(parsedPriceTrackingList || []);
     } catch (error) {
       alert(error);
@@ -90,7 +86,6 @@ export function Home() {
           setPriceTrackingList(updatedList);
         },
       },
-      //{ cancleable: true },
     ]);
   }
 

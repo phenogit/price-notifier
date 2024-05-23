@@ -4,7 +4,7 @@ export function getFilteredPriceTrackingList(priceTrackingList, activeTab) {
       return priceTrackingList;
     case "inProgress":
       return priceTrackingList.filter((item) => !item.isComplete);
-    case "completed":
+    case "done":
       return priceTrackingList.filter((item) => item.isComplete);
     default:
       return priceTrackingList;

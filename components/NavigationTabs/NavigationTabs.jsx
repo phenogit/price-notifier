@@ -2,6 +2,7 @@ import { styles } from "./NavigationTabs.style";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export function NavigationTabs({ priceTrackingList, activeTab, setActiveTab }) {
+  console.log("Navi");
   const countByStatus = {
     all: priceTrackingList.length,
     inProgress: priceTrackingList.filter((i) => !i.isComplete).length,
