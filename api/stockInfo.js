@@ -5,6 +5,6 @@ const FUGLE_API_URL =
 
 export class StockInfoAPI {
   static async getStockInfo(stockId) {
-    return (await axios.get(`${FUGLGE_API_URL}?stockId=${stockId}`)).data;
+    return (await axios.get(`${FUGLE_API_URL}?stockId=${stockId}`)).data;
   }
 }

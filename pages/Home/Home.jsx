@@ -10,6 +10,7 @@ import { Header } from "../../components/Header/Header";
 import { AddButton } from "../../components/AddButton/AddButton";
 import { getFilteredPriceTrackingList } from "../../utils/priceTracking";
 import { NavigationTabs } from "../../components/NavigationTabs/NavigationTabs";
+import { StockInfoAPI } from "../../api/stockInfo";
 
 let isInitialLoad = false;
 
@@ -35,6 +36,19 @@ export function Home() {
       savePriceTrackingList();
     }
   }, [priceTrackingList]);
+
+  useEffect(() => {
+    getStockInfo("2330"); // hardcode for now
+  }, []);
+
+  async function getStockInfo(stockId) {
+    try {
+      const stockInfo = await StockInfoAPI.getStockInfo(stockId);
+      console.log(stockInfo);
+    } catch (error) {
+      alert(error);
+    }
+  }
 
   const scrollViewRef = useRef();
 
