@@ -21,6 +21,9 @@ export function Home() {
     useState(false);
   const [stockId, setStockId] = useState("");
   const [stockName, setStockName] = useState("");
+  const [currentHighPrice, setCurrentHighPrice] = useState("");
+  const [currentLowPrice, setCurrentLowPrice] = useState("");
+  const [currentAvgPrice, setCurrentAvgPrice] = useState("");
   const [ceilingPrice, setCeilingPrice] = useState("");
   const [floorPrice, setFloorPrice] = useState("");
 
@@ -50,7 +53,11 @@ export function Home() {
     try {
       console.log(stockId);
       const stockInfo = await StockInfoAPI.getStockInfo(stockId);
-      console.log(stockInfo.name);
+      setStockName(stockInfo.name);
+      setCurrentHighPrice(stockInfo.highPrice);
+      setCurrentLowPrice(stockInfo.lowPrice);
+      setCurrentAvgPrice(stockInfo.avgPrice);
+      console.log(stockInfo);
     } catch (error) {
       alert(error);
     }
@@ -93,7 +100,7 @@ export function Home() {
   }
 
   function deletePriceTrackingItem(item) {
-    Alert.alert("刪除觸價追蹤", "確定要刪除 ${item.title} 嗎？", [
+    Alert.alert("刪除觸價追蹤", `確定要刪除 ${item.title} 嗎？`, [
       {
         text: "取消",
         style: "cancel",
@@ -135,6 +142,9 @@ export function Home() {
           placeholder="請輸入股票代號"
           onChangeText={setStockId}
         />
+        <Text>
+          {stockName}: {currentLowPrice} - {currentHighPrice}
+        </Text>
         <Dialog.Input
           label="上限價"
           placeholder="請輸入上限價"
@@ -161,10 +171,10 @@ export function Home() {
   function addPriceTrackingItem() {
     const newPriceTrackingItem = {
       id: uuid.v4(),
-      title: `${stockId} {stockName todo}`, // TODO: get stock name from API
+      title: `${stockId} ${stockName}`,
       ceilingPrice,
       floorPrice,
-      currentPrice: `0`, // TODO: get current price from API
+      currentPrice: `${currentAvgPrice}`,
       isComplete: false,
     };
 
