@@ -1,4 +1,4 @@
-import { Alert, View, ScrollView } from "react-native";
+import { Alert, View, ScrollView, Text } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Dialog from "react-native-dialog";
@@ -20,6 +20,7 @@ export function Home() {
   const [isAddPriceTrackingDialogVisible, setIsAddPriceTrackingDialogVisible] =
     useState(false);
   const [stockId, setStockId] = useState("");
+  const [stockName, setStockName] = useState("");
   const [ceilingPrice, setCeilingPrice] = useState("");
   const [floorPrice, setFloorPrice] = useState("");
 
@@ -38,13 +39,18 @@ export function Home() {
   }, [priceTrackingList]);
 
   useEffect(() => {
-    getStockInfo("2330"); // hardcode for now
-  }, []);
+    // disallow useless API calls
+    if (stockId === "" || stockId.length < 4) {
+      return;
+    }
+    getStockInfo(stockId);
+  }, [stockId]);
 
   async function getStockInfo(stockId) {
     try {
+      console.log(stockId);
       const stockInfo = await StockInfoAPI.getStockInfo(stockId);
-      console.log(stockInfo);
+      console.log(stockInfo.name);
     } catch (error) {
       alert(error);
     }
