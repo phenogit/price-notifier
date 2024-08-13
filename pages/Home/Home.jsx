@@ -5,12 +5,11 @@ import Dialog from "react-native-dialog";
 import uuid from "react-native-uuid";
 
 import { styles } from "./Home.style";
-import { PriceTrackingCard } from "../../components/PriceTrackingCard/PriceTrackingCard";
 import { Header } from "../../components/Header/Header";
 import { AddButton } from "../../components/AddButton/AddButton";
-import { getFilteredPriceTrackingList } from "../../utils/priceTracking";
 import { NavigationTabs } from "../../components/NavigationTabs/NavigationTabs";
 import { StockInfoAPI } from "../../api/stockInfo";
+import { PriceTrackingList } from "../../components/PriceTrackingList/PriceTrackingList";
 
 let isInitialLoad = false;
 
@@ -116,20 +115,6 @@ export function Home() {
     ]);
   }
 
-  function renderPriceTrackingList() {
-    return getFilteredPriceTrackingList(priceTrackingList, activeTab).map(
-      (priceTrackingItem) => (
-        <View key={priceTrackingItem.id} style={styles.cardItem}>
-          <PriceTrackingCard
-            priceTrackingItem={priceTrackingItem}
-            onPress={updatePriceTrackingItem}
-            onLongPress={deletePriceTrackingItem}
-          />
-        </View>
-      )
-    );
-  }
-
   function renderAddPriceTrackingDialog() {
     return (
       <Dialog.Container
@@ -198,7 +183,14 @@ export function Home() {
         <Header />
       </View>
       <View style={styles.body}>
-        <ScrollView ref={scrollViewRef}>{renderPriceTrackingList()}</ScrollView>
+        <ScrollView ref={scrollViewRef}>
+          <PriceTrackingList
+            priceTrackingList={priceTrackingList}
+            activeTab={activeTab}
+            updatePriceTrackingItem={updatePriceTrackingItem}
+            deletePriceTrackingItem={deletePriceTrackingItem}
+          />
+        </ScrollView>
       </View>
       <AddButton onPress={() => setIsAddPriceTrackingDialogVisible(true)} />
       {renderAddPriceTrackingDialog()}
