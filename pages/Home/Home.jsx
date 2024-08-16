@@ -10,6 +10,7 @@ import { AddButton } from "../../components/AddButton/AddButton";
 import { NavigationTabs } from "../../components/NavigationTabs/NavigationTabs";
 import { StockInfoAPI } from "../../api/stockInfo";
 import { PriceTrackingList } from "../../components/PriceTrackingList/PriceTrackingList";
+import { AddPriceTrackingDialog } from "../../components/AddPriceTrackingDialog/AddPriceTrackingDialog";
 
 let isInitialLoad = false;
 
@@ -115,44 +116,6 @@ export function Home() {
     ]);
   }
 
-  function renderAddPriceTrackingDialog() {
-    return (
-      <Dialog.Container
-        visible={isAddPriceTrackingDialogVisible}
-        onBackdropPress={() => setIsAddPriceTrackingDialogVisible(false)}
-      >
-        <Dialog.Title>新增觸價追蹤</Dialog.Title>
-        <Dialog.Input
-          label="股票代號"
-          placeholder="請輸入股票代號"
-          onChangeText={setStockId}
-        />
-        <Text>
-          {stockName}: {currentLowPrice} - {currentHighPrice}
-        </Text>
-        <Dialog.Input
-          label="上限價"
-          placeholder="請輸入上限價"
-          onChangeText={setCeilingPrice}
-        />
-        <Dialog.Input
-          label="下限價"
-          placeholder="請輸入下限價"
-          onChangeText={setFloorPrice}
-        />
-        <Dialog.Button
-          label="取消"
-          onPress={() => setIsAddPriceTrackingDialogVisible(false)}
-        />
-        <Dialog.Button
-          label="新增"
-          onPress={addPriceTrackingItem}
-          disabled={!isValidTrackingItem()}
-        />
-      </Dialog.Container>
-    );
-  }
-
   function addPriceTrackingItem() {
     const newPriceTrackingItem = {
       id: uuid.v4(),
@@ -173,10 +136,6 @@ export function Home() {
     }, 300);
   }
 
-  function isValidTrackingItem() {
-    return stockId && ceilingPrice && floorPrice;
-  }
-
   return (
     <>
       <View style={styles.header}>
@@ -193,7 +152,20 @@ export function Home() {
         </ScrollView>
       </View>
       <AddButton onPress={() => setIsAddPriceTrackingDialogVisible(true)} />
-      {renderAddPriceTrackingDialog()}
+      <AddPriceTrackingDialog
+        isAddPriceTrackingDialogVisible={isAddPriceTrackingDialogVisible}
+        setIsAddPriceTrackingDialogVisible={setIsAddPriceTrackingDialogVisible}
+        setStockId={setStockId}
+        stockId={stockId}
+        stockName={stockName}
+        currentLowPrice={currentLowPrice}
+        currentHighPrice={currentHighPrice}
+        setCeilingPrice={setCeilingPrice}
+        ceilingPrice={ceilingPrice}
+        setFloorPrice={setFloorPrice}
+        floorPrice={floorPrice}
+        addPriceTrackingItem={addPriceTrackingItem}
+      />
       <View style={styles.footer}>
         <NavigationTabs
           priceTrackingList={priceTrackingList}
