@@ -1,14 +1,11 @@
-import { Alert, View, ScrollView, Text } from "react-native";
+import { Alert, View, ScrollView } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Dialog from "react-native-dialog";
-import uuid from "react-native-uuid";
 
 import { styles } from "./Home.style";
 import { Header } from "../../components/Header/Header";
 import { AddButton } from "../../components/AddButton/AddButton";
 import { NavigationTabs } from "../../components/NavigationTabs/NavigationTabs";
-import { StockInfoAPI } from "../../api/stockInfo";
 import { PriceTrackingList } from "../../components/PriceTrackingList/PriceTrackingList";
 import { AddPriceTrackingDialog } from "../../components/AddPriceTrackingDialog/AddPriceTrackingDialog";
 
@@ -19,13 +16,6 @@ export function Home() {
   const [activeTab, setActiveTab] = useState("inProgress");
   const [isAddPriceTrackingDialogVisible, setIsAddPriceTrackingDialogVisible] =
     useState(false);
-  const [stockId, setStockId] = useState("");
-  const [stockName, setStockName] = useState("");
-  const [currentHighPrice, setCurrentHighPrice] = useState("");
-  const [currentLowPrice, setCurrentLowPrice] = useState("");
-  const [currentAvgPrice, setCurrentAvgPrice] = useState("");
-  const [ceilingPrice, setCeilingPrice] = useState("");
-  const [floorPrice, setFloorPrice] = useState("");
 
   useEffect(() => {
     isInitialLoad = true;
@@ -41,27 +31,7 @@ export function Home() {
     }
   }, [priceTrackingList]);
 
-  useEffect(() => {
-    // disallow useless API calls
-    if (stockId === "" || stockId.length < 4) {
-      return;
-    }
-    getStockInfo(stockId);
-  }, [stockId]);
-
-  async function getStockInfo(stockId) {
-    try {
-      console.log(stockId);
-      const stockInfo = await StockInfoAPI.getStockInfo(stockId);
-      setStockName(stockInfo.name);
-      setCurrentHighPrice(stockInfo.highPrice);
-      setCurrentLowPrice(stockInfo.lowPrice);
-      setCurrentAvgPrice(stockInfo.avgPrice);
-      console.log(stockInfo);
-    } catch (error) {
-      alert(error);
-    }
-  }
+  console.log(priceTrackingList);
 
   const scrollViewRef = useRef();
 
@@ -116,26 +86,6 @@ export function Home() {
     ]);
   }
 
-  function addPriceTrackingItem() {
-    const newPriceTrackingItem = {
-      id: uuid.v4(),
-      title: `${stockId} ${stockName}`,
-      ceilingPrice,
-      floorPrice,
-      currentPrice: `${currentAvgPrice}`,
-      isComplete: false,
-    };
-
-    setPriceTrackingList([...priceTrackingList, newPriceTrackingItem]);
-    setStockId("");
-    setCeilingPrice("");
-    setFloorPrice("");
-    setIsAddPriceTrackingDialogVisible(false);
-    setTimeout(() => {
-      scrollViewRef.current.scrollToEnd({ animated: true });
-    }, 300);
-  }
-
   return (
     <>
       <View style={styles.header}>
@@ -155,16 +105,8 @@ export function Home() {
       <AddPriceTrackingDialog
         isAddPriceTrackingDialogVisible={isAddPriceTrackingDialogVisible}
         setIsAddPriceTrackingDialogVisible={setIsAddPriceTrackingDialogVisible}
-        setStockId={setStockId}
-        stockId={stockId}
-        stockName={stockName}
-        currentLowPrice={currentLowPrice}
-        currentHighPrice={currentHighPrice}
-        setCeilingPrice={setCeilingPrice}
-        ceilingPrice={ceilingPrice}
-        setFloorPrice={setFloorPrice}
-        floorPrice={floorPrice}
-        addPriceTrackingItem={addPriceTrackingItem}
+        priceTrackingList={priceTrackingList}
+        setPriceTrackingList={setPriceTrackingList}
       />
       <View style={styles.footer}>
         <NavigationTabs

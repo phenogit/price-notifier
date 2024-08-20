@@ -1,24 +1,76 @@
 import Dialog from "react-native-dialog";
 import { Text } from "react-native";
+import uuid from "react-native-uuid";
+import { useEffect, useState } from "react";
+
+import { StockInfoAPI } from "../../api/stockInfo";
 
 function isValidTrackingItem(stockId, ceilingPrice, floorPrice) {
   return stockId && ceilingPrice && floorPrice;
 }
 
+function addPriceTrackingItem(
+  stockId,
+  currentStockInfo,
+  ceilingPrice,
+  floorPrice,
+  priceTrackingList,
+  setPriceTrackingList
+) {
+  console.log(priceTrackingList);
+  const newPriceTrackingItem = {
+    id: uuid.v4(),
+    title: `${stockId} ${currentStockInfo.name}`,
+    ceilingPrice,
+    floorPrice,
+    currentPrice: `${currentStockInfo.avgPrice}`,
+    isComplete: false,
+  };
+
+  setPriceTrackingList([...priceTrackingList, newPriceTrackingItem]);
+  /*
+  setStockId("");
+  setCeilingPrice("");
+  setFloorPrice("");
+  setIsAddPriceTrackingDialogVisible(false);
+  setTimeout(() => {
+    scrollViewRef.current.scrollToEnd({ animated: true });
+  }, 300);
+  */
+}
+
 export function AddPriceTrackingDialog({
   isAddPriceTrackingDialogVisible,
   setIsAddPriceTrackingDialogVisible,
-  setStockId,
-  stockId,
-  stockName,
-  currentLowPrice,
-  currentHighPrice,
-  setCeilingPrice,
-  ceilingPrice,
-  setFloorPrice,
-  floorPrice,
-  addPriceTrackingItem,
+  priceTrackingList,
+  setPriceTrackingList,
 }) {
+  const [stockId, setStockId] = useState("");
+  const [currentStockInfo, setCurrentStockInfo] = useState({});
+  const [ceilingPrice, setCeilingPrice] = useState("");
+  const [floorPrice, setFloorPrice] = useState("");
+
+  console.log(priceTrackingList);
+
+  useEffect(() => {
+    // disallow useless API calls
+    if (stockId === "" || stockId.length < 4) {
+      return;
+    }
+    getStockInfo(stockId);
+  }, [stockId]);
+
+  async function getStockInfo(stockId) {
+    try {
+      console.log(stockId);
+      const stockInfo = await StockInfoAPI.getStockInfo(stockId);
+      setCurrentStockInfo(stockInfo);
+      console.log(stockInfo);
+    } catch (error) {
+      alert(error);
+    }
+  }
+
   return (
     <Dialog.Container
       visible={isAddPriceTrackingDialogVisible}
@@ -31,7 +83,8 @@ export function AddPriceTrackingDialog({
         onChangeText={setStockId}
       />
       <Text>
-        {stockName}: {currentLowPrice} - {currentHighPrice}
+        {currentStockInfo.name}: {currentStockInfo.lowPrice} -{" "}
+        {currentStockInfo.highPrice}
       </Text>
       <Dialog.Input
         label="上限價"
@@ -49,7 +102,16 @@ export function AddPriceTrackingDialog({
       />
       <Dialog.Button
         label="新增"
-        onPress={addPriceTrackingItem}
+        onPress={() =>
+          addPriceTrackingItem(
+            stockId,
+            currentStockInfo,
+            ceilingPrice,
+            floorPrice,
+            priceTrackingList,
+            setPriceTrackingList
+          )
+        }
         disabled={!isValidTrackingItem(stockId, ceilingPrice, floorPrice)}
       />
     </Dialog.Container>
