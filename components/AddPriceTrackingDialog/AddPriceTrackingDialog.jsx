@@ -11,11 +11,15 @@ function isValidTrackingItem(stockId, ceilingPrice, floorPrice) {
 
 function addPriceTrackingItem(
   stockId,
+  setStockId,
   currentStockInfo,
+  setCurrentStockInfo,
   ceilingPrice,
   floorPrice,
   priceTrackingList,
-  setPriceTrackingList
+  setPriceTrackingList,
+  scrollViewRef,
+  setIsAddPriceTrackingDialogVisible
 ) {
   console.log(priceTrackingList);
   const newPriceTrackingItem = {
@@ -28,11 +32,12 @@ function addPriceTrackingItem(
   };
 
   setPriceTrackingList([...priceTrackingList, newPriceTrackingItem]);
+  setIsAddPriceTrackingDialogVisible(false);
   /*
   setStockId("");
   setCeilingPrice("");
   setFloorPrice("");
-  setIsAddPriceTrackingDialogVisible(false);
+  
   setTimeout(() => {
     scrollViewRef.current.scrollToEnd({ animated: true });
   }, 300);
@@ -44,6 +49,7 @@ export function AddPriceTrackingDialog({
   setIsAddPriceTrackingDialogVisible,
   priceTrackingList,
   setPriceTrackingList,
+  scrollViewRef,
 }) {
   const [stockId, setStockId] = useState("");
   const [currentStockInfo, setCurrentStockInfo] = useState({});
@@ -105,11 +111,15 @@ export function AddPriceTrackingDialog({
         onPress={() =>
           addPriceTrackingItem(
             stockId,
+            setStockId,
             currentStockInfo,
+            setCurrentStockInfo,
             ceilingPrice,
             floorPrice,
             priceTrackingList,
-            setPriceTrackingList
+            setPriceTrackingList,
+            scrollViewRef,
+            setIsAddPriceTrackingDialogVisible
           )
         }
         disabled={!isValidTrackingItem(stockId, ceilingPrice, floorPrice)}

@@ -107,6 +107,7 @@ export function Home() {
         setIsAddPriceTrackingDialogVisible={setIsAddPriceTrackingDialogVisible}
         priceTrackingList={priceTrackingList}
         setPriceTrackingList={setPriceTrackingList}
+        scrollViewRef={scrollViewRef}
       />
       <View style={styles.footer}>
         <NavigationTabs
