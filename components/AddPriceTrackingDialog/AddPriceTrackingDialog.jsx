@@ -11,14 +11,11 @@ function isValidTrackingItem(stockId, ceilingPrice, floorPrice) {
 
 function addPriceTrackingItem(
   stockId,
-  setStockId,
   currentStockInfo,
-  setCurrentStockInfo,
   ceilingPrice,
   floorPrice,
   priceTrackingList,
   setPriceTrackingList,
-  scrollViewRef,
   setIsAddPriceTrackingDialogVisible
 ) {
   console.log(priceTrackingList);
